@@ -1,9 +1,9 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <span>2 Bros Brewing</span>
+    <span routerLink="/blog">2 Bros Brewing</span>
     <span class="spacer"> </span>
     <div *ngIf="auth.afAuth.authState| async as user; else showLogin">
-      <span>Hola {{user.displayName}}</span>
+      <button mat-raised-button color="accent" routerLink="/dashboard">Nueva Entrada</button>
       <button mat-button (click)="auth.logout()">Logout</button>
     </div>
     <ng-template #showLogin>
