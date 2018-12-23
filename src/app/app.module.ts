@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
 
 /************************************************ */
 /**Angular Material Modules */
@@ -21,6 +22,14 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 
 /************************************************ */
 import { environment } from 'src/environments/environment';
+import { PostsModule } from './posts/posts.module';
+
+
+
+const routes:Routes=[
+  {path:'', redirectTo:'/blog', pathMatch:'full'},
+  {path:'', loadChildren:'./posts/posts.module.ts#PostsModule'}
+]
 
 @NgModule({
   declarations: [
@@ -28,12 +37,14 @@ import { environment } from 'src/environments/environment';
   ],
   imports: [
     BrowserModule,
+    RouterModule.forRoot(routes),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
     CoreModule,
-    SharedModule
+    SharedModule,
+    PostsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
