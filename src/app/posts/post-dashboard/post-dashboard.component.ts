@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/core/auth.service';
 import { PostService } from '../post.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable } from 'rxjs';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 @Component({
   selector: 'app-post-dashboard',
@@ -14,14 +16,21 @@ export class PostDashboardComponent implements OnInit {
   image: string = null;
   content: string;
 
-  buttonText: string="Agregar Entrada"
+  buttonText: string = "Agregar Entrada"
+  uploadPercent: Observable<number>;
+  downloadURL: Observable<string>;
 
-  constructor(private auth: AuthService, private postService: PostService, public toast: MatSnackBar) { }
+  constructor(
+    private auth: AuthService,
+    private postService: PostService,
+    public toast: MatSnackBar,
+    private storage: AngularFireStorage
+  ) { }
 
   ngOnInit() {
   }
 
-   createPost() {
+  createPost() {
     const data = {
       author: this.auth.authState.displayName || this.auth.authState.email,
       authorId: this.auth.currentUserId,
@@ -33,26 +42,42 @@ export class PostDashboardComponent implements OnInit {
     this.postService.create(data);
     this.title = "";
     this.content = "";
-    this.buttonText = "Entrada Agregada";
-    setTimeout(()=>(this.buttonText= "Agregar Entrada"), 3000);
+    alert( "Entrada Agregada exitosamente");
+    
+
 
     //refactorizar esto para hacer un toast y no esta cochinada
     //this.showToast();
   }
 
- /*  showToast() {
-    this.toast.openFromComponent(ToastComponent), { duration: 500, });
-  } */
-}
-/* @Component({
-  selector: 'app-toast',
-  template: `hola`
-  styles: [`
-    .toast {
-      color: hotpink;
+  uploadImage(event) {
+    const file = event.target.files[0];
+    const path = `posts/${file.name}`;
+    if(file.type.split('/')[0]!== 'image'){
+      return alert("Solo archivos de imagen");
     }
-  `],
+    else{
+      const task=this.storage.upload(path, file);
+      this.downloadURL=this.storage.ref(path).getDownloadURL();
+      this.uploadPercent  =task.percentageChanges();
+      console.log('image uploaded!')
+      this.downloadURL.subscribe(url=>this.image=url);
+    }
+  }
+}
+ /*  showToast() {
+this.toast.openFromComponent(ToastComponent), { duration: 500, });
+}
+}
+@Component({
+selector: 'app-toast',
+template: `hola`
+styles: [`
+.toast {
+color: hotpink;
+}
+`],
 })
 export class ToastComponent {}
 
- */
+*/

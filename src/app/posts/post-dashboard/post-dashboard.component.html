@@ -6,6 +6,16 @@
           Nueva Entrada
         </mat-panel-title>
       </mat-expansion-panel-header>
+
+      <div>
+        <input type="file" name="file" id="file" (change)="uploadImage($event)">
+        <div [hidden]="!uploadPercent">
+          <mat-progress-bar mode="determinate" value="{{uploadPercent | async}}"></mat-progress-bar>
+        </div>
+      </div>
+      <div [hidden]="!image">
+        <img [src]="image || '//:0'" ><!--  fake file system hasta que aparezca la imagen -->
+      </div>
       <mat-form-field>
         <input matInput placeholder="Titulo del post" [(ngModel)]="title">
       </mat-form-field>
