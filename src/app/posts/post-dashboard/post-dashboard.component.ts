@@ -4,6 +4,7 @@ import { PostService } from '../post.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-post-dashboard',
@@ -24,7 +25,8 @@ export class PostDashboardComponent implements OnInit {
     private auth: AuthService,
     private postService: PostService,
     public toast: MatSnackBar,
-    private storage: AngularFireStorage
+    private storage: AngularFireStorage,
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -42,8 +44,8 @@ export class PostDashboardComponent implements OnInit {
     this.postService.create(data);
     this.title = "";
     this.content = "";
-    alert( "Entrada Agregada exitosamente");
-    
+    alert("Entrada Agregada exitosamente");
+    this.router.navigate(["/blog"]);
 
 
     //refactorizar esto para hacer un toast y no esta cochinada
@@ -53,15 +55,15 @@ export class PostDashboardComponent implements OnInit {
   uploadImage(event) {
     const file = event.target.files[0];
     const path = `posts/${file.name}`;
-    if(file.type.split('/')[0]!== 'image'){
+    if (file.type.split('/')[0] !== 'image') {
       return alert("Solo archivos de imagen");
     }
-    else{
-      const task=this.storage.upload(path, file);
-      this.downloadURL=this.storage.ref(path).getDownloadURL();
-      this.uploadPercent  =task.percentageChanges();
+    else {
+      const task = this.storage.upload(path, file);
+      this.downloadURL = this.storage.ref(path).getDownloadURL();
+      this.uploadPercent = task.percentageChanges();
       console.log('image uploaded!')
-      this.downloadURL.subscribe(url=>this.image=url);
+      this.downloadURL.subscribe(url => this.image = url);
     }
   }
 }
