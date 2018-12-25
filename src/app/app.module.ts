@@ -16,7 +16,7 @@ import { SharedModule } from './shared/shared.module';
 /*Firebae modules */
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { AngularFireStorageModule, AngularFireStorage } from '@angular/fire/storage';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
 
@@ -24,9 +24,10 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from 'src/environments/environment';
 import { PostsModule } from './posts/posts.module';
 
+
 const routes:Routes=[
   {path:'', redirectTo:'/blog', pathMatch:'full'},
-  {path:'', loadChildren:'./posts/posts.module.ts#PostsModule'}
+  {path:'', loadChildren:'./posts/posts.module#PostsModule'}
 ]
 
 @NgModule({
@@ -42,9 +43,8 @@ const routes:Routes=[
     AngularFireAuthModule,
     AngularFireStorageModule,
     CoreModule,
-    PostsModule,
     SharedModule,
-    
+    PostsModule,    
   ],
   providers: [],
   bootstrap: [AppComponent]
